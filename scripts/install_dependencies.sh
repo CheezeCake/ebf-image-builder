@@ -36,7 +36,7 @@ debootstrap_is_installed () {
 			#FIXME: comment out the next line to use QEMU
 			#exit 2
 			dpkg -l | grep qemu-user-static >/dev/null || deb_pkgs="${deb_pkgs}qemu-user-static "
-			dpkg -l | grep $(dpkg --print-architecture) | grep -v "qemu-" | grep qemu >/dev/null || deb_pkgs="${deb_pkgs}qemu "
+			dpkg -l | grep $(dpkg --print-architecture) | grep -v "qemu-" | grep qemu >/dev/null || deb_pkgs="${deb_pkgs}qemu-system "
 			dpkg -l | grep git >/dev/null || deb_pkgs="${deb_pkgs}git "
 			dpkg -l | grep dosfstools >/dev/null || deb_pkgs="${deb_pkgs}dosfstools "
 			dpkg -l | grep kpartx >/dev/null || deb_pkgs="${deb_pkgs}kpartx "
