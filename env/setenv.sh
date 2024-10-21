@@ -10,7 +10,7 @@ unset SUPPORTED_LINUX_TAGS
 
 DISTRIBUTION_ARRAY=("Debian" "Ubuntu")
 Ubuntu_RELEASE_ARRAY=("bionic" "focal")
-Debian_RELEASE_ARRAY=("buster")
+Debian_RELEASE_ARRAY=("buster" "bookworm")
 Ubuntu_TYPE_ARRAY=("console" "qt" "desktop")
 Debian_TYPE_ARRAY=("console" "qt" "desktop")
 INSTALL_TYPE_ARRAY=("ALL" "NAND" "eMMC/SD")

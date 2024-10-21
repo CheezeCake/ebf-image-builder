@@ -350,7 +350,7 @@ if [ "x${deb_distribution}" = "xdebian" -o "x${deb_distribution}" = "lubancat" ]
 		echo 'Acquire::GzipIndexes "true"; APT::Compressor::xz::Cost "40";' > /tmp/02compress-indexes
 		sudo mv /tmp/02compress-indexes "${tempdir}/etc/apt/apt.conf.d/02compress-indexes"
 		;;
-	buster|sid)
+	buster|bookworm|sid)
 		###FIXME: close to release switch to ^ xz, right now buster is slow on apt...
 		echo 'Acquire::GzipIndexes "true"; APT::Compressor::gzip::Cost "40";' > /tmp/02compress-indexes
 		sudo mv /tmp/02compress-indexes "${tempdir}/etc/apt/apt.conf.d/02compress-indexes"
@@ -378,7 +378,7 @@ echo "" >> ${wfile}
 
 #https://wiki.debian.org/StableUpdates
 case "${deb_codename}" in
-buster|sid)
+buster|bookworm|sid)
 	echo "#deb http://${deb_mirror} ${deb_codename}-updates ${deb_components}" >> ${wfile}
 	echo "##deb-src http://${deb_mirror} ${deb_codename}-updates ${deb_components}" >> ${wfile}
 	echo "" >> ${wfile}
@@ -400,7 +400,7 @@ jessie|stretch)
 	echo "#deb-src http://deb.debian.org/debian-security ${deb_codename}/updates ${deb_components}" >> ${wfile}
 	echo "" >> ${wfile}
 	;;
-buster|sid)
+buster|bookworm|sid)
 	echo "#deb http://deb.debian.org/debian-security ${deb_codename}/updates ${deb_components}" >> ${wfile}
 	echo "##deb-src http://deb.debian.org/debian-security ${deb_codename}/updates ${deb_components}" >> ${wfile}
 	echo "" >> ${wfile}
@@ -423,8 +423,10 @@ if [ "x${repo_external}" = "xenable" ] ; then
 	echo "#deb ${repo_external_server_backup1} ${repo_external_dist} ${repo_external_components}" >> ${wfile}
 	echo "#deb ${repo_external_server_backup2} ${repo_external_dist} ${repo_external_components}" >> ${wfile}
 	echo "deb [arch=${repo_external_arch}] ${repo_external_server} buster ${repo_external_components}" >> ${wfile}
-	echo "deb [arch=${repo_external_arch}] ${repo_external_server} ${ebf_repo_dist} ${repo_external_components}" >> ${wfile}
-	echo "#deb-src [arch=${repo_external_arch}] ${repo_external_server} ${repo_external_dist} ${repo_external_components}" >> ${wfile}
+	if [ "${deb_codename}" = "buster" ]; then
+		echo "deb [arch=${repo_external_arch}] ${repo_external_server} ${ebf_repo_dist} ${repo_external_components}" >> ${wfile}
+		echo "#deb-src [arch=${repo_external_arch}] ${repo_external_server} ${repo_external_dist} ${repo_external_components}" >> ${wfile}
+	fi
 fi
 
 if [ "x${repo_flat}" = "xenable" ] ; then
@@ -523,7 +525,7 @@ if [ "x${deb_arch}" = "xarmhf" ] || [ "x${deb_arch}" = "xarm64" ]; then
 	case "${deb_distribution}" in
 	lubancat)
 		case "${deb_codename}" in
-		jessie|stretch|buster)
+		jessie|stretch|buster|bookworm)
 			#while bb-customizations installes "generic-board-startup.service" other boards/configs could use this default.
 			sudo cp "${OIB_DIR}/target/init_scripts/systemd-generic-board-startup.service" "${tempdir}/lib/systemd/system/generic-board-startup.service"
 			sudo chown root:root "${tempdir}/lib/systemd/system/generic-board-startup.service"
@@ -1086,8 +1088,11 @@ cat > "${DIR}/chroot_script.sh" <<-__EOF__
 			systemctl enable haveged.service || true
 		fi
 
-		if [ -f /lib/systemd/system/rng-tools.service ] ; then
-			systemctl enable rng-tools.service || true
+		#if [ -f /lib/systemd/system/rng-tools.service ] ; then
+		#	systemctl enable rng-tools.service || true
+		#fi
+		if [ -f /lib/systemd/system/rngd.service ] ; then
+			systemctl enable rngd.service || true
 		fi
 
 #		if [ -f /lib/systemd/system/actlogo.service ] ; then
