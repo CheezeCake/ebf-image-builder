@@ -32,7 +32,7 @@ else
 endif
 
 tfa:
-ifeq ($(and $(DISTRIBUTION),$(DISTRIB_RELEASE),$(DISTRIB_TYPE),$(DISTRIB_ARCH),$(FIRE_BOARD),$(LINUX),$(UBOOT),$(INSTALL_TYPE)),)
+ifeq ($(and $(DISTRIBUTION),$(DISTRIB_RELEASE),$(DISTRIB_TYPE),$(FIRE_BOARD),$(LINUX),$(UBOOT),$(INSTALL_TYPE)),)
 	$(call help_message)
 else
 	@./scripts/build.sh tfa
