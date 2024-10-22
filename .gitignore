@@ -10,3 +10,5 @@ release
 build/
 history/
 rkbin/
+tf-a*
+u-boot*
